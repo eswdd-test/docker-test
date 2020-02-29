@@ -19,3 +19,4 @@ jobs:
           name: Check PEM file
           command: ls -la
       - run: gem install jwt
+      - run: ruby jwt.rb
