@@ -12,12 +12,13 @@ jobs:
       - checkout
       - docker/build:
           image: eswdd-test/docker-test
+      - run: echo "${GITHUB_APP_KEY}" | tr ' ' '\n' > github.pem
       - run: ls -la
       - run: git clone https://github.com/eswdd-test/github-app-authenticator
       - run:
           command: go build -o github-app-authenticator *.go
           working_directory: github-app-authenticator
-      - run: github-app-authenticator/github-app-authenticator --installation-id=${GITHUB_INSTALL_ID} --application-id=${GITHUB_APP_ID} --private-key=../github.pem > github.token
+      - run: github-app-authenticator/github-app-authenticator --installation-id=${GITHUB_INSTALL_ID} --application-id=${GITHUB_APP_ID} --private-key=github.pem > github.token
       - run: export GITHUB_TOKEN=`cat github.token`
       - run: ls -la
       
