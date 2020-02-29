@@ -15,6 +15,7 @@ jobs:
   auth:
     docker:
       - image: circleci/ruby:latest
+    steps:
       - checkout
       - run:
           name: Create PEM file
