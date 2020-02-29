@@ -10,8 +10,12 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - docker/build:
-          image: eswdd-test/docker-test
+      #- docker/build:
+      #    image: eswdd-test/docker-test
+  auth:
+    docker:
+      - image: circleci/ruby:latest
+      - checkout
       - run:
           name: Create PEM file
           command: echo "${GITHUB_APP_KEY}" | tr ' ' '\n' > github.pem
@@ -20,3 +24,4 @@ jobs:
           command: ls -la
       - run: gem install jwt
       - run: ruby jwt.rb
+      
