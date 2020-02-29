@@ -12,9 +12,7 @@ jobs:
       - checkout
       - docker/build:
           image: eswdd-test/docker-test
-      - run: echo "-----BEGIN RSA PRIVATE KEY-----" > github.pem
-      - run: echo "${GITHUB_APP_KEY}" | tr ' ' '\n' >> github.pem
-      - run: echo "-----END RSA PRIVATE KEY-----" >> github.pem
+      - run: echo "${GITHUB_APP_KEY_BASE64}" | base64 --decode > github.pem
       - run: ls -la
       - run: git clone https://github.com/eswdd-test/github-app-authenticator
       - run:
