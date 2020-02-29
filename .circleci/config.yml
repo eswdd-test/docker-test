@@ -12,7 +12,7 @@ jobs:
       - checkout
       #- docker/build:
       #    image: eswdd-test/docker-test
-  auth:
+  deploy:
     docker:
       - image: circleci/ruby:latest
     steps:
