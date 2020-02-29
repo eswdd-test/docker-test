@@ -8,6 +8,7 @@ jobs:
     docker:
       - image: circleci/golang:1.12.5
     steps:
+      - setup_remote_docker
       - checkout
       - docker/build:
           image: eswdd-test/docker-test
