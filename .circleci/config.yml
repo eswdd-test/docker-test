@@ -16,5 +16,8 @@ jobs:
           name: Create PEM file
           command: echo "${GITHUB_APP_KEY}" | tr ' ' '\n' > github.pem
       - run:
+          name: Check PEM file
+          command: ls -la
+      - run:
           name: Generate JWT
           command: docker run --rm -v "${PWD}/github.pem:/key" karlkfi/jwt-encoder ${GITHUB_APP_ID} /key --duration=600 --algorithm=RS256
