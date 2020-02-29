@@ -3,6 +3,7 @@ version: 2.1
 # Orchestrate or schedule a set of jobs
 jobs:
   github_auth:
+    machine: true
     steps:
       - run:
           name: Create PEM file
