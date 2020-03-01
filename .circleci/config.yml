@@ -23,6 +23,7 @@ jobs:
       - run: ls -la
       - run: export DOCKER_USER="docker-test-publisher"
       - run: export DOCKER_PASSWORD="$GITHUB_TOKEN"
+      - run: echo "$DOCKER_PASSWORD" | docker login docker.pkg.github.com -u "$DOCKER_USER" --password-stdin
       - run: docker login docker.pkg.github.com
       - run: docker push eswdd-test/docker-test
       
