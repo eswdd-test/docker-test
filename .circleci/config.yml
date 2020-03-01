@@ -21,10 +21,7 @@ jobs:
       - run: github-app-authenticator/github-app-authenticator --installation-id=${GITHUB_INSTALL_ID} --application-id=${GITHUB_APP_ID} --private-key=github.pem > github.token
       - run: export GITHUB_TOKEN=`cat github.token`
       - run: ls -la
-      - docker/publish:
-          image: eswdd-test/docker-test
-          registry: docker.pkg.github.com
-          docker-username: dockert-test-publisher
-          docker-password: ${GITHUB_TOKEN}
+      - run: echo "$GITHUB_TOKEN" | docker login docker.pkg.github.com -u "dockert-test-publisher" --password-stdin
+      - run: docker push eswdd-test/docker-test
       
       
