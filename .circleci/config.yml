@@ -7,11 +7,24 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.12.5
+    environment:
+      DOCKER_USER: docker-test-publisher
+      SOURCE_IMAGE: eswdd-test/docker-test
+      IMAGE_NAME: docker.pkg.github.com/eswdd-test/docker-test/autobuild
     steps:
       - setup_remote_docker
       - checkout
-      - docker/build:
-          image: eswdd-test/docker-test
+      - run:
+          name: Docker build
+          command: |
+            set -x
+            extra=
+            if [[ "$CIRCLE_TAG" != "" ]]; then
+              branch=$CIRCLE_TAG
+            else
+              branch=$CIRCLE_BRANCH
+            fi
+            docker build -t $SOURCE_IMAGE:$branch --build-arg GIT_REVISION="$CIRCLE_SHA1" --build-arg GIT_BRANCH="$branch" --build-arg BUILD_USER="circleci" .
       - run: echo "${GITHUB_APP_KEY_BASE64}" | base64 --decode > github.pem
       - run: ls -la
       - run: git clone https://github.com/eswdd-test/github-app-authenticator
@@ -21,10 +34,22 @@ jobs:
       - run: github-app-authenticator/github-app-authenticator --installation-id=${GITHUB_INSTALL_ID} --application-id=${GITHUB_APP_ID} --private-key=github.pem > github.token
       - run: export GITHUB_TOKEN=`cat github.token`
       - run: ls -la
-      - run: 
-          command: cat github.token | docker login docker.pkg.github.com --username "$DOCKER_USER" --password-stdin
-          environment:
-            DOCKER_USER: docker-test-publisher
       - run: docker push eswdd-test/docker-test
+      - run:
+          name: Push autobuild Docker image
+          command: |
+            cat github.token | docker login docker.pkg.github.com --username "$DOCKER_USER" --password-stdin
+            set -x
+            if [[ $CIRCLE_TAG != "" ]]; then
+              branch=$CIRCLE_TAG
+            else
+              branch=$CIRCLE_BRANCH
+            fi
+            if [[ $CIRCLE_TAG == "" ]] && [[ $CIRCLE_BRANCH != "master" ]]; then
+              echo "Not on a tag or master, skipped."
+              exit 0
+            fi
+            docker tag $SOURCE_IMAGE:$branch $IMAGE_NAME:$branch
+            docker push $IMAGE_NAME:$branch
       
       
