@@ -10,7 +10,7 @@ jobs:
     environment:
       DOCKER_USER: docker-test-publisher
       SOURCE_IMAGE: eswdd-test/docker-test
-      IMAGE_NAME: docker.pkg.github.com/eswdd-test/docker-test/autobuild
+      IMAGE_NAME: eswddtest/docker-test/autobuild
     steps:
       - setup_remote_docker
       - checkout
