@@ -24,7 +24,8 @@ jobs:
             else
               branch=$CIRCLE_BRANCH
             fi
-            docker build -t $SOURCE_IMAGE:$branch --build-arg GIT_REVISION="$CIRCLE_SHA1" --build-arg GIT_BRANCH="$branch" --build-arg BUILD_USER="circleci" .      - run: ls -la
+            docker build -t $SOURCE_IMAGE:$branch --build-arg GIT_REVISION="$CIRCLE_SHA1" --build-arg GIT_BRANCH="$branch" --build-arg BUILD_USER="circleci" .
+      - run: ls -la
       - run:
           name: Push autobuild Docker image
           command: |
