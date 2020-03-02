@@ -24,19 +24,11 @@ jobs:
             else
               branch=$CIRCLE_BRANCH
             fi
-            docker build -t $SOURCE_IMAGE:$branch --build-arg GIT_REVISION="$CIRCLE_SHA1" --build-arg GIT_BRANCH="$branch" --build-arg BUILD_USER="circleci" .
-      - run: echo "${GITHUB_APP_KEY_BASE64}" | base64 --decode > github.pem
-      - run: ls -la
-      - run: git clone https://github.com/eswdd-test/github-app-authenticator
-      - run:
-          command: go build -o github-app-authenticator *.go
-          working_directory: github-app-authenticator
-      - run: github-app-authenticator/github-app-authenticator --installation-id=${GITHUB_INSTALL_ID} --application-id=${GITHUB_APP_ID} --private-key=github.pem > github.token
-      - run: ls -la
+            docker build -t $SOURCE_IMAGE:$branch --build-arg GIT_REVISION="$CIRCLE_SHA1" --build-arg GIT_BRANCH="$branch" --build-arg BUILD_USER="circleci" .      - run: ls -la
       - run:
           name: Push autobuild Docker image
           command: |
-            cat github.token | docker login docker.pkg.github.com --username "$DOCKER_USER" --password-stdin
+            docker login --username "$DOCKER_HUB_USER" --password "$DOCKER_HUB_PASSWORD"
             set -x
             if [[ $CIRCLE_TAG != "" ]]; then
               branch=$CIRCLE_TAG
