@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Push autobuild Docker image
           command: |
-            docker login --username "$DOCKER_HUB_USER" --password "$DOCKER_HUB_PASSWORD"
+            echo "$DOCKER_HUB_PASSWORD" | docker login --username "$DOCKER_HUB_USER" --password-stdin
             set -x
             if [[ $CIRCLE_TAG != "" ]]; then
               branch=$CIRCLE_TAG
